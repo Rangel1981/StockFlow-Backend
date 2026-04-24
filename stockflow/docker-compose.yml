@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  
+  db:
+    image: postgres:15
+    container_name: stockmaster_db
+    restart: always
+    environment:
+      POSTGRES_USER: arthur_user
+      POSTGRES_PASSWORD: senha_secreta_123
+      POSTGRES_DB: stockmaster_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+ 
+  api:
+    build: .
+    container_name: stockmaster_api
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://arthur_user:senha_secreta_123@db:5432/stockmaster_db
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
