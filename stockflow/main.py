@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
+from database import criar_db_e_tabelas
+from routes import product_routes, setor_routes # Importa suas rotas novas
 from contextlib import asynccontextmanager
-from sqlmodel import Session
-from database import criar_db_e_tabelas, get_session # Direto do arquivo database
-from models.product_model import Produto
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -11,13 +11,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="StockFlow - API", lifespan=lifespan)
 
+app.include_router(setor_routes.router)
+
+app.include_router(product_routes.router)
+
 @app.get("/")
 def home():
-    return {"Mensagem": "StockFlow Online!", "Status": "🚀"}
-
-@app.post("/produtos/", response_model=Produto)
-def criar_produto(produto: Produto, session: Session = Depends(get_session)):
-    session.add(produto)
-    session.commit()
-    session.refresh(produto)
-    return produto
+    return {"mensagem": "StockFlow online!", "Estrutura": "Modularizada!"} 

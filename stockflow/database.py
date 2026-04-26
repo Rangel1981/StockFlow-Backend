@@ -1,5 +1,8 @@
 import os
-from sqlmodel import create_engine, SQLModel, Session
+
+from sqlmodel import SQLModel, Session, create_engine
+from models.product_model import Produto
+from models.setor_model import Setor
 
 # O Docker passa esse endereço pra gente automaticamente
 DATABASE_URL = os.getenv("DATABASE_URL")
